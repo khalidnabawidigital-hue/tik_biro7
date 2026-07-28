@@ -105,7 +105,7 @@ function openDetail(num, opts = {}) {
     </div>
 
     <div class="detail-panel__actions">
-      <a href="bab1.html" class="btn-glow btn-glow--full">
+      <a href="${ch.slug}.html" class="btn-glow btn-glow--full">
         <i class="fa-solid fa-rocket"></i> Masuk ke Materi Bab ${ch.num}
       </a>
       <a href="#" class="btn-ghost">
