@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bab 2: Berpikir Komputasional — Informatika VII</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Font Awesome 6 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<!-- AOS Animation -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+<style>
+:root {
+  --bg-0: #05060f;
+  --bg-1: #0a0e27;
+  --bg-2: #0d1230;
+  --surface: rgba(255, 255, 255, 0.055);
+  --surface-strong: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-soft: rgba(255, 255, 255, 0.07);
+  --text-0: #f4f6ff;
+  --text-1: #c4cae8;
+  --text-2: #8a91b8;
+
+  --accent: #7C4DFF;
+  --accent-soft: rgba(124, 77, 255, 0.16);
+  --accent-glow: rgba(124, 77, 255, 0.4);
+
+  --neon-cyan: #00E5FF;
+  --neon-pink: #FF2E92;
+  --neon-mint: #2EE6A8;
+  --neon-amber: #FFB020;
+
+  --font-display: 'Poppins', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg-0);
+  color: var(--text-0);
+  font-family: var(--font-display);
+  overflow-x: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent); color: #fff; }
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; margin: 0; padding: 0; }
+
+/* Background Canvas & Effects */
+#particles-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55;
+}
+
+.bg-grid {
+  position: fixed; inset: -10%; z-index: 0;
+  background-image:
+    linear-gradient(rgba(124,77,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124,77,255,0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, black 40%, transparent 90%);
+  pointer-events: none;
+}
+
+.bg-glow {
+  position: fixed; z-index: 0; border-radius: 50%; filter: blur(120px); pointer-events: none; opacity: 0.35;
+}
+.bg-glow--1 { width: 600px; height: 600px; top: -150px; left: -100px; background: var(--accent); }
+.bg-glow--2 { width: 700px; height: 700px; bottom: -100px; right: -200px; background: var(--neon-cyan); opacity: 0.2; }
+
+main, header, footer, nav { position: relative; z-index: 2; }
+
+.scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 1000; background: rgba(255,255,255,0.05);
+}
+.scroll-progress__bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--neon-cyan), var(--neon-pink));
+  box-shadow: 0 0 12px var(--neon-cyan);
+  transition: width .1s linear;
+}
+
+.topnav {
+  position: fixed; top: 3px; left: 0; right: 0; z-index: 900;
+  backdrop-filter: blur(16px);
+  background: rgba(5,6,15,0.65);
+  border-bottom: 1px solid var(--border-soft);
+}
+.topnav__inner {
+  max-width: 1300px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 28px;
+}
+.topnav__brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1rem; }
+.topnav__brand-icon {
+  width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--accent), var(--neon-cyan)); color: #04060f; font-size: 0.95rem;
+}
+.topnav__brand-accent { color: var(--neon-cyan); margin-left: 4px; }
+.topnav__links { display: flex; gap: 24px; }
+.topnav__links a { font-size: 0.88rem; color: var(--text-1); font-weight: 500; transition: color .2s; }
+.topnav__links a:hover { color: var(--neon-cyan); }
+.topnav__badge {
+  font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: .04em;
+  border: 1px solid var(--border); border-radius: 100px; padding: 6px 14px;
+  color: var(--text-1); display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03);
+}
+.topnav__back-btn {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 600;
+  color: var(--neon-cyan); border: 1px solid rgba(0, 229, 255, 0.3); padding: 6px 14px; border-radius: 100px;
+  background: rgba(0, 229, 255, 0.05); transition: all 0.25s var(--ease);
+}
+.topnav__back-btn:hover { background: rgba(0, 229, 255, 0.18); transform: translateX(-3px); color: #fff; }
+
+@media (max-width: 860px) { .topnav__links { display: none; } }
+
+.hero {
+  min-height: 85vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 130px 24px 60px; position: relative;
+}
+.eyebrow {
+  font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: .14em; color: var(--neon-cyan);
+  display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(0,229,255,0.35);
+  background: rgba(0,229,255,0.06); padding: 8px 18px; border-radius: 100px; margin-bottom: 24px;
+}
+.eyebrow__dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan); animation: pulse-dot 1.6s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.4;transform:scale(1.4);} }
+
+.hero__title {
+  font-size: clamp(2.2rem, 5vw, 4.2rem); font-weight: 800; line-height: 1.15; margin: 0 0 20px; letter-spacing: -.02em;
+}
+.hero__title-gradient {
+  background: linear-gradient(90deg, var(--accent), var(--neon-cyan) 50%, var(--neon-pink));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  background-size: 200% auto; animation: gradient-shift 6s ease-in-out infinite;
+}
+@keyframes gradient-shift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+
+.hero__subtitle {
+  font-size: clamp(0.98rem, 1.8vw, 1.25rem); color: var(--text-1); font-weight: 400; max-width: 760px; margin: 0 auto 36px; line-height: 1.65;
+}
+
+.hero__cta { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; margin-bottom: 48px; }
+
+.btn-glow {
+  display: inline-flex; align-items: center; gap: 10px; padding: 14px 30px; border-radius: 100px;
+  font-weight: 600; font-size: 0.95rem; color: #04060f;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--accent));
+  box-shadow: 0 8px 30px rgba(0,229,255,.35); transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.btn-glow:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,229,255,.5); color: #04060f; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; border-radius: 100px;
+  font-weight: 600; font-size: 0.95rem; color: var(--text-0); border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03); transition: all .3s var(--ease);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,.3); color: var(--text-0); transform: translateY(-3px); }
+
+.hero__stats {
+  display: flex; align-items: center; gap: 24px; flex-wrap: wrap; justify-content: center;
+  padding: 18px 30px; border-radius: 100px; background: var(--surface); border: 1px solid var(--border-soft); backdrop-filter: blur(18px);
+}
+.hero__stat { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.hero__stat-num { font-family: var(--font-mono); font-weight: 700; font-size: 1.4rem; color: var(--accent); }
+.hero__stat-label { font-size: 0.72rem; color: var(--text-2); letter-spacing: .03em; }
+.hero__stat-sep { width: 1px; height: 28px; background: var(--border); }
+
+.content-section { padding: 80px 24px; }
+.section-kicker { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: .14em; color: var(--neon-cyan); margin-bottom: 10px; text-align: center; }
+.section-title { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 700; text-align: center; margin: 0 0 16px; letter-spacing: -.01em; }
+.section-desc { text-align: center; color: var(--text-1); max-width: 720px; margin: 0 auto 40px; font-size: 1.02rem; line-height: 1.7; }
+
+/* Custom Glass Cards */
+.glass-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(16px);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.glass-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(124, 77, 255, 0.4);
+  box-shadow: 0 20px 40px -15px rgba(124, 77, 255, 0.25);
+}
+
+/* Topik / Materi Grid (5 topik BK) */
+.element-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+.element-card {
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex; flex-direction: column; gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  position: relative;
+}
+.element-card::before {
+  content: ""; position: absolute; inset: 0; border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--card-color, var(--accent)), transparent);
+  opacity: 0; transition: opacity 0.3s var(--ease); pointer-events: none;
+}
+.element-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--card-color, var(--accent));
+  box-shadow: 0 12px 30px -8px var(--card-glow, var(--accent-glow));
+}
+.element-card:hover::before { opacity: 0.12; }
+
+.element-card__head { display: flex; align-items: center; justify-content: space-between; }
+.element-card__code {
+  font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
+  padding: 4px 10px; border-radius: 8px; color: var(--card-color, var(--accent));
+  background: color-mix(in srgb, var(--card-color, var(--accent)) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--card-color, var(--accent)) 30%, transparent);
+}
+.element-card__icon {
+  width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem; color: var(--card-color, var(--accent));
+  background: color-mix(in srgb, var(--card-color, var(--accent)) 15%, transparent);
+}
+.element-card__title { font-size: 1.1rem; font-weight: 600; color: var(--text-0); margin: 0; }
+.element-card__desc { font-size: 0.88rem; color: var(--text-1); margin: 0; line-height: 1.55; }
+.element-card__badge {
+  align-self: flex-start; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-2);
+  margin-top: auto; display: flex; align-items: center; gap: 6px;
+}
+
+/* Alur Algoritma / Langkah bernomor */
+.flow-steps { display: flex; flex-direction: column; gap: 14px; }
+.flow-step {
+  display: flex; gap: 18px; align-items: flex-start;
+  padding: 18px 20px; border-radius: var(--radius-md);
+  background: var(--surface); border: 1px solid var(--border);
+  transition: transform 0.3s var(--ease), border-color .3s var(--ease);
+}
+.flow-step:hover { transform: translateX(6px); border-color: var(--neon-mint); }
+.flow-step__num {
+  width: 40px; height: 40px; border-radius: 12px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-weight: 700; font-size: 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--neon-cyan)); color: #04060f;
+}
+.flow-step__text h5 { margin: 0 0 4px; font-size: 1rem; font-weight: 600; color: var(--text-0); }
+.flow-step__text p { margin: 0; font-size: 0.88rem; color: var(--text-1); line-height: 1.55; }
+
+/* Pancasila-style grid reused for "4 Pilar Berpikir Komputasional" */
+.pancasila-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+.pancasila-card {
+  display: flex; gap: 18px; align-items: flex-start;
+  padding: 22px; border-radius: var(--radius-md);
+  background: var(--surface); border: 1px solid var(--border);
+  transition: transform 0.3s var(--ease);
+}
+.pancasila-card:hover { transform: translateY(-4px); border-color: var(--neon-cyan); }
+.pancasila-card__icon {
+  width: 48px; height: 48px; border-radius: 14px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--accent), var(--neon-cyan));
+  color: #04060f; font-size: 1.2rem;
+}
+.pancasila-card__text h4 { font-size: 1.05rem; font-weight: 600; margin: 0 0 6px; color: var(--text-0); }
+.pancasila-card__text p { font-size: 0.88rem; color: var(--text-1); margin: 0; line-height: 1.55; }
+
+/* Jadwal / Optimasi Table */
+.schedule-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.88rem; }
+.schedule-table th {
+  background: rgba(124,77,255,0.12); color: var(--text-0); font-family: var(--font-mono);
+  font-weight: 600; text-align: left; padding: 12px 16px; font-size: 0.78rem; letter-spacing: .03em;
+}
+.schedule-table th:first-child { border-radius: 12px 0 0 12px; }
+.schedule-table th:last-child { border-radius: 0 12px 12px 0; }
+.schedule-table td { padding: 12px 16px; color: var(--text-1); border-bottom: 1px solid var(--border-soft); }
+.schedule-table tr:last-child td { border-bottom: none; }
+.schedule-table td.hl { color: var(--neon-mint); font-weight: 600; font-family: var(--font-mono); }
+
+/* Struktur Data / Representasi Cards */
+.team-role-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.team-role-item {
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: var(--radius-md);
+  padding: 20px; display: flex; align-items: flex-start; gap: 14px;
+}
+.team-role-item i { color: var(--neon-mint); font-size: 1.3rem; margin-top: 2px; }
+.team-role-item h5 { margin: 0 0 4px; font-size: 0.98rem; font-weight: 600; }
+.team-role-item p { margin: 0; font-size: 0.85rem; color: var(--text-1); line-height: 1.5; }
+
+/* Representasi Data - bit blocks */
+.bit-row { display: flex; gap: 8px; flex-wrap: wrap; font-family: var(--font-mono); }
+.bit-box {
+  width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 1rem; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--text-2);
+}
+.bit-box.on { background: rgba(0,229,255,0.16); border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: 0 0 14px rgba(0,229,255,0.25); }
+
+/* Communication-style callout cards reused for "Kenapa Belajar Ini" */
+.comm-card {
+  border-left: 4px solid var(--neon-cyan); background: rgba(0, 229, 255, 0.04);
+  padding: 20px 24px; border-radius: 0 var(--radius-md) var(--radius-md) 0; margin-bottom: 16px;
+}
+.comm-card h5 { margin: 0 0 8px; font-size: 1rem; color: var(--neon-cyan); display: flex; align-items: center; gap: 10px; }
+.comm-card p { margin: 0; font-size: 0.9rem; color: var(--text-1); line-height: 1.6; }
+
+.quiz-box {
+  background: linear-gradient(180deg, rgba(124, 77, 255, 0.08), rgba(0, 229, 255, 0.04));
+  border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 36px;
+  position: relative; overflow: hidden;
+}
+.quiz-option {
+  display: block; width: 100%; text-align: left; padding: 14px 20px; margin-bottom: 12px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text-0); font-size: 0.92rem; cursor: pointer; transition: all 0.25s var(--ease);
+}
+.quiz-option:hover { background: rgba(124, 77, 255, 0.15); border-color: var(--accent); transform: translateX(4px); }
+.quiz-option.correct { background: rgba(46, 230, 168, 0.2) !important; border-color: var(--neon-mint) !important; color: #fff; }
+.quiz-option.wrong { background: rgba(255, 46, 146, 0.2) !important; border-color: var(--neon-pink) !important; color: #fff; }
+
+/* Navigation Footer Banner */
+.chapter-nav {
+  display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 30px; border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border);
+  margin-top: 60px;
+}
+.chapter-nav__btn {
+  display: inline-flex; align-items: center; gap: 12px; padding: 12px 24px; border-radius: 100px;
+  font-weight: 600; font-size: 0.9rem; transition: all 0.3s var(--ease);
+}
+.chapter-nav__btn--prev { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-1); }
+.chapter-nav__btn--prev:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.chapter-nav__btn--next { background: linear-gradient(90deg, var(--accent), var(--neon-cyan)); color: #04060f; }
+.chapter-nav__btn--next:hover { transform: translateX(4px); box-shadow: 0 6px 20px var(--accent-glow); color: #04060f; }
+
+/* Site Footer */
+.site-footer {
+  padding: 40px 24px; text-align: center; border-top: 1px solid var(--border-soft); margin-top: 60px;
+}
+.site-footer p { color: var(--text-2); font-size: 0.85rem; margin: 0; }
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-glow bg-glow--1" aria-hidden="true"></div>
+<div class="bg-glow bg-glow--2" aria-hidden="true"></div>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress" aria-hidden="true"><div class="scroll-progress__bar" id="scrollProgressBar"></div></div>
+
+<nav class="topnav">
+  <div class="topnav__inner">
+    <a href="index.html" class="topnav__brand">
+      <span class="topnav__brand-icon"><i class="fa-solid fa-compass"></i></span>
+      <span class="topnav__brand-text">Informatika<span class="topnav__brand-accent">SMP VII</span></span>
+    </a>
+    <div class="topnav__links">
+      <a href="#capaian">Capaian</a>
+      <a href="#materi">Materi</a>
+      <a href="#algoritma">Algoritma</a>
+      <a href="#penjadwalan">Penjadwalan</a>
+      <a href="#struktur-data">Struktur Data</a>
+      <a href="#kuis">Kuis Bab 2</a>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <a href="bab1.html" class="topnav__back-btn"><i class="fa-solid fa-arrow-left"></i> Bab 1</a>
+      <div class="topnav__badge d-none d-sm-flex"><i class="fa-solid fa-book-bookmark"></i> BAB 02 / 09</div>
+    </div>
+  </div>
+</nav>
+
+<header id="hero" class="hero">
+  <div class="hero__inner">
+    <p class="eyebrow" data-aos="fade-down">
+      <span class="eyebrow__dot"></span> BAB 2 &middot; SEMESTER 1 &middot; ELEMEN BK
+    </p>
+
+    <h1 class="hero__title" data-aos="fade-up" data-aos-delay="100">
+      Berpikir <br>
+      <span class="hero__title-gradient">Komputasional</span>
+    </h1>
+
+    <p class="hero__subtitle" data-aos="fade-up" data-aos-delay="200">
+      Mengenal cara berpikir komputasional untuk menyelesaikan persoalan sehari-hari yang efektif dan efisien, melalui konsep algoritma, optimasi penjadwalan, struktur data, dan representasi data.
+    </p>
+
+    <div class="hero__cta" data-aos="fade-up" data-aos-delay="300">
+      <a href="#capaian" class="btn-glow">
+        <i class="fa-solid fa-play"></i> Mulai Pelajari Bab 2
+      </a>
+      <a href="#kuis" class="btn-ghost">
+        <i class="fa-solid fa-pen-to-square"></i> Uji Pemahaman
+      </a>
+    </div>
+
+    <div class="hero__stats" data-aos="fade-up" data-aos-delay="400">
+      <div class="hero__stat">
+        <span class="hero__stat-num">5</span>
+        <span class="hero__stat-label">Topik Utama</span>
+      </div>
+      <div class="hero__stat-sep"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-num">4</span>
+        <span class="hero__stat-label">Pilar Berpikir</span>
+      </div>
+      <div class="hero__stat-sep"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-num">3</span>
+        <span class="hero__stat-label">Proyek Praktik</span>
+      </div>
+      <div class="hero__stat-sep"></div>
+      <div class="hero__stat">
+        <span class="hero__stat-num">01</span>
+        <span class="hero__stat-label">Bit &amp; Biner</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- 1. CAPAIAN PEMBELAJARAN -->
+  <section id="capaian" class="content-section">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">📌 SUB-BAB 2.1</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Capaian <span style="color: var(--accent);">Pembelajaran</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Target kompetensi yang perlu kalian kuasai setelah mempelajari Bab 2 ini.
+      </p>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-9" data-aos="zoom-in">
+          <div class="glass-card">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="p-3 rounded-3" style="background: rgba(124,77,255,0.15); color: var(--accent); font-size: 1.4rem;">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+              <h4 class="m-0 text-white">Capaian Pembelajaran (CP) Elemen BK</h4>
+            </div>
+            <p style="color: var(--text-1); line-height: 1.8; font-size: 1rem; margin: 0;">
+              Mengenal cara berpikir komputasional untuk menyelesaikan persoalan sehari-hari yang efektif dan efisien, melalui konsep <strong style="color: var(--neon-cyan);">algoritma</strong>, <strong style="color: var(--neon-mint);">optimasi penjadwalan</strong>, <strong style="color: var(--neon-amber);">struktur data</strong>, dan <strong style="color: var(--neon-pink);">representasi data</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. APA YANG AKAN DIPELAJARI -->
+  <section id="materi" class="content-section" style="background: rgba(255,255,255,0.015);">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">🧩 PETA MATERI</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Apa yang Akan <span style="color: var(--neon-cyan);">Dipelajari?</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Lima topik utama yang akan kita jelajahi bersama di Bab 2 ini:
+      </p>
+
+      <div class="element-grid">
+        <div class="element-card" style="--card-color: #00E5FF; --card-glow: rgba(0,229,255,0.3);" data-aos="fade-up">
+          <div class="element-card__head">
+            <span class="element-card__code">01</span>
+            <div class="element-card__icon"><i class="fa-solid fa-brain"></i></div>
+          </div>
+          <h4 class="element-card__title">Apa Itu Berpikir Komputasional</h4>
+          <p class="element-card__desc">Cara berpikir sistematis untuk memecah masalah menjadi langkah-langkah logis.</p>
+          <span class="element-card__badge"><i class="fa-solid fa-anchor"></i> Fondasi</span>
+        </div>
+
+        <div class="element-card" style="--card-color: #7C4DFF; --card-glow: rgba(124,77,255,0.3);" data-aos="fade-up" data-aos-delay="80">
+          <div class="element-card__head">
+            <span class="element-card__code">02</span>
+            <div class="element-card__icon"><i class="fa-solid fa-diagram-project"></i></div>
+          </div>
+          <h4 class="element-card__title">Algoritma</h4>
+          <p class="element-card__desc">Urutan langkah logis dan terstruktur untuk menyelesaikan suatu persoalan.</p>
+          <span class="element-card__badge"><i class="fa-solid fa-anchor"></i> Sub-bab 2.2</span>
+        </div>
+
+        <div class="element-card" style="--card-color: #2EE6A8; --card-glow: rgba(46,230,168,0.3);" data-aos="fade-up" data-aos-delay="160">
+          <div class="element-card__head">
+            <span class="element-card__code">03</span>
+            <div class="element-card__icon"><i class="fa-solid fa-calendar-check"></i></div>
+          </div>
+          <h4 class="element-card__title">Optimasi Penjadwalan</h4>
+          <p class="element-card__desc">Menyusun urutan kegiatan agar waktu dan sumber daya terpakai seefisien mungkin.</p>
+          <span class="element-card__badge"><i class="fa-solid fa-anchor"></i> Sub-bab 2.3</span>
+        </div>
+
+        <div class="element-card" style="--card-color: #FFB020; --card-glow: rgba(255,176,32,0.3);" data-aos="fade-up" data-aos-delay="240">
+          <div class="element-card__head">
+            <span class="element-card__code">04</span>
+            <div class="element-card__icon"><i class="fa-solid fa-layer-group"></i></div>
+          </div>
+          <h4 class="element-card__title">Struktur Data</h4>
+          <p class="element-card__desc">Cara menyimpan dan mengorganisasi data seperti antrean, tumpukan, dan daftar.</p>
+          <span class="element-card__badge"><i class="fa-solid fa-anchor"></i> Sub-bab 2.4</span>
+        </div>
+
+        <div class="element-card" style="--card-color: #FF2E92; --card-glow: rgba(255,46,146,0.3);" data-aos="fade-up" data-aos-delay="320">
+          <div class="element-card__head">
+            <span class="element-card__code">05</span>
+            <div class="element-card__icon"><i class="fa-solid fa-code-branch"></i></div>
+          </div>
+          <h4 class="element-card__title">Representasi Data</h4>
+          <p class="element-card__desc">Bagaimana komputer menyimpan data dalam bentuk bit dan biner.</p>
+          <span class="element-card__badge"><i class="fa-solid fa-anchor"></i> Sub-bab 2.5</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Apa itu Berpikir Komputasional (4 Pilar) -->
+  <section id="pilar" class="content-section">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">🧠 FONDASI BERPIKIR</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        4 Pilar <span style="color: var(--accent);">Berpikir Komputasional</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Berpikir komputasional bukan tentang menghafal kode, melainkan cara memecah masalah rumit menjadi bagian-bagian sederhana melalui empat pilar berikut:
+      </p>
+
+      <div class="pancasila-grid">
+        <div class="pancasila-card" data-aos="fade-up">
+          <div class="pancasila-card__icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+          <div class="pancasila-card__text">
+            <h4>1. Dekomposisi</h4>
+            <p>Memecah masalah besar dan rumit menjadi bagian-bagian kecil yang lebih mudah diselesaikan.</p>
+          </div>
+        </div>
+
+        <div class="pancasila-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="pancasila-card__icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <div class="pancasila-card__text">
+            <h4>2. Pengenalan Pola</h4>
+            <p>Menemukan kesamaan atau tren dari beberapa masalah untuk mempercepat penyelesaian.</p>
+          </div>
+        </div>
+
+        <div class="pancasila-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="pancasila-card__icon"><i class="fa-solid fa-eye"></i></div>
+          <div class="pancasila-card__text">
+            <h4>3. Abstraksi</h4>
+            <p>Berfokus pada informasi penting saja dan mengabaikan detail yang tidak relevan.</p>
+          </div>
+        </div>
+
+        <div class="pancasila-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="pancasila-card__icon"><i class="fa-solid fa-list-ol"></i></div>
+          <div class="pancasila-card__text">
+            <h4>4. Algoritma</h4>
+            <p>Menyusun langkah-langkah penyelesaian secara runtut, logis, dan dapat diulang.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ALGORITMA -->
+  <section id="algoritma" class="content-section" style="background: rgba(255,255,255,0.015);">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">⚙️ SUB-BAB 2.2</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Menyusun <span style="color: var(--neon-cyan);">Algoritma</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Algoritma adalah urutan langkah logis dan terstruktur untuk menyelesaikan suatu persoalan. Contoh algoritma sederhana: membuat mi instan.
+      </p>
+
+      <div class="row g-4">
+        <div class="col-lg-6" data-aos="fade-right">
+          <div class="flow-steps">
+            <div class="flow-step">
+              <span class="flow-step__num">1</span>
+              <div class="flow-step__text">
+                <h5>Didihkan air</h5>
+                <p>Isi panci dengan air secukupnya, lalu panaskan hingga mendidih.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <span class="flow-step__num">2</span>
+              <div class="flow-step__text">
+                <h5>Masukkan mi</h5>
+                <p>Masukkan mi ke air mendidih dan masak selama 3 menit.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <span class="flow-step__num">3</span>
+              <div class="flow-step__text">
+                <h5>Tiriskan & campur bumbu</h5>
+                <p>Tuang mi ke mangkuk, campurkan bumbu, minyak, dan pelengkap lain.</p>
+              </div>
+            </div>
+            <div class="flow-step">
+              <span class="flow-step__num">4</span>
+              <div class="flow-step__text">
+                <h5>Aduk rata dan sajikan</h5>
+                <p>Aduk hingga bumbu tercampur merata, lalu mi instan siap disantap.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="glass-card h-100">
+            <h4 class="text-white mb-3"><i class="fa-solid fa-circle-info text-info me-2"></i> Ciri-ciri Algoritma yang Baik</h4>
+            <ul style="color: var(--text-1); font-size: 0.93rem; line-height: 1.8; list-style: none; padding-left: 0;">
+              <li class="mb-2"><i class="fa-solid fa-check-circle text-success me-2"></i> <strong>Jelas & tidak ambigu</strong> — setiap langkah dapat dipahami dengan satu arti.</li>
+              <li class="mb-2"><i class="fa-solid fa-check-circle text-success me-2"></i> <strong>Memiliki input & output</strong> — ada data masukan dan hasil akhir yang jelas.</li>
+              <li class="mb-2"><i class="fa-solid fa-check-circle text-success me-2"></i> <strong>Berurutan (sequence)</strong> — langkah dikerjakan sesuai urutan yang benar.</li>
+              <li class="mb-2"><i class="fa-solid fa-check-circle text-success me-2"></i> <strong>Berhenti (finite)</strong> — algoritma harus berakhir setelah sejumlah langkah tertentu.</li>
+            </ul>
+            <div class="p-3 mt-3 border-start border-3 border-info" style="background: rgba(0, 229, 255, 0.05); border-radius: 0 12px 12px 0;">
+              <p class="m-0 text-white fw-500" style="font-size: 0.88rem;">
+                <i class="fa-solid fa-quote-left text-info me-2"></i> Algoritma bisa ditulis sebagai teks (pseudocode), bagan alur (flowchart), atau bahkan bahasa sehari-hari.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. OPTIMASI PENJADWALAN -->
+  <section id="penjadwalan" class="content-section">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">📅 SUB-BAB 2.3</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Optimasi <span style="color: var(--neon-mint);">Penjadwalan</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Optimasi penjadwalan adalah cara menyusun urutan kegiatan agar waktu dan sumber daya yang terbatas dapat dipakai seefisien mungkin.
+      </p>
+
+      <div class="row g-4">
+        <div class="col-lg-7" data-aos="fade-right">
+          <div class="glass-card">
+            <h4 class="text-white mb-3"><i class="fa-solid fa-table-list text-mint me-2" style="color: var(--neon-mint);"></i> Contoh: Jadwal Belajar Efisien</h4>
+            <div class="table-responsive">
+              <table class="schedule-table">
+                <thead>
+                  <tr><th>Waktu</th><th>Kegiatan</th><th>Prioritas</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>15.30 – 16.00</td><td>Istirahat & camilan</td><td class="hl">Rendah</td></tr>
+                  <tr><td>16.00 – 17.00</td><td>Kerjakan PR Matematika (tenggat besok)</td><td class="hl">Tinggi</td></tr>
+                  <tr><td>17.00 – 17.30</td><td>Baca ringkasan Bab 2 Informatika</td><td class="hl">Sedang</td></tr>
+                  <tr><td>19.00 – 19.45</td><td>Latihan soal untuk ulangan minggu depan</td><td class="hl">Sedang</td></tr>
+                  <tr><td>19.45 – 20.00</td><td>Siapkan tas & alat sekolah</td><td class="hl">Rendah</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5" data-aos="fade-left">
+          <div class="team-role-list" style="grid-template-columns: 1fr;">
+            <div class="team-role-item">
+              <i class="fa-solid fa-clock"></i>
+              <div>
+                <h5>Kenali Batas Waktu</h5>
+                <p>Dahulukan tugas dengan tenggat (deadline) paling dekat.</p>
+              </div>
+            </div>
+            <div class="team-role-item">
+              <i class="fa-solid fa-star"></i>
+              <div>
+                <h5>Urutkan Prioritas</h5>
+                <p>Kerjakan hal penting & mendesak terlebih dahulu, baru yang santai.</p>
+              </div>
+            </div>
+            <div class="team-role-item">
+              <i class="fa-solid fa-battery-half"></i>
+              <div>
+                <h5>Perhitungkan Sumber Daya</h5>
+                <p>Pertimbangkan energi, alat, dan waktu istirahat agar tidak kelelahan.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. STRUKTUR DATA -->
+  <section id="struktur-data" class="content-section" style="background: rgba(255,255,255,0.015);">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">🗂️ SUB-BAB 2.4</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Mengenal <span style="color: var(--neon-amber);">Struktur Data</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Struktur data adalah cara mengorganisasi dan menyimpan data agar mudah diakses dan diolah. Berikut tiga struktur data dasar yang biasa kita temui dalam kehidupan sehari-hari:
+      </p>
+
+      <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-up">
+          <div class="glass-card h-100">
+            <div class="p-3 rounded-3 mb-3 d-inline-flex" style="background: rgba(255,176,32,0.15); color: var(--neon-amber); font-size: 1.3rem;">
+              <i class="fa-solid fa-list"></i>
+            </div>
+            <h5 class="text-white mb-2">Daftar (List)</h5>
+            <p style="color: var(--text-1); font-size: 0.88rem; line-height: 1.6;">Kumpulan data berurutan yang bisa ditambah atau dikurangi, seperti daftar belanja.</p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="glass-card h-100">
+            <div class="p-3 rounded-3 mb-3 d-inline-flex" style="background: rgba(0,229,255,0.15); color: var(--neon-cyan); font-size: 1.3rem;">
+              <i class="fa-solid fa-people-line"></i>
+            </div>
+            <h5 class="text-white mb-2">Antrean (Queue)</h5>
+            <p style="color: var(--text-1); font-size: 0.88rem; line-height: 1.6;">Data diproses sesuai urutan masuk (First In, First Out), seperti antre di kantin.</p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="glass-card h-100">
+            <div class="p-3 rounded-3 mb-3 d-inline-flex" style="background: rgba(255,46,146,0.15); color: var(--neon-pink); font-size: 1.3rem;">
+              <i class="fa-solid fa-layer-group"></i>
+            </div>
+            <h5 class="text-white mb-2">Tumpukan (Stack)</h5>
+            <p style="color: var(--text-1); font-size: 0.88rem; line-height: 1.6;">Data terakhir masuk diambil lebih dulu (Last In, First Out), seperti tumpukan piring.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. REPRESENTASI DATA -->
+  <section id="representasi" class="content-section">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">🔢 SUB-BAB 2.5</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Representasi <span style="color: var(--neon-pink);">Data</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Komputer hanya mengenal dua kondisi: <strong>nyala (1)</strong> dan <strong>mati (0)</strong>. Kombinasi angka biner (bit) inilah yang digunakan untuk merepresentasikan semua data digital.
+      </p>
+
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6" data-aos="fade-right">
+          <div class="glass-card">
+            <h5 class="text-white mb-3"><i class="fa-solid fa-hashtag text-pink me-2" style="color: var(--neon-pink);"></i> Contoh: Angka 13 dalam Biner</h5>
+            <div class="bit-row mb-3">
+              <div class="bit-box on">1</div>
+              <div class="bit-box on">1</div>
+              <div class="bit-box">0</div>
+              <div class="bit-box on">1</div>
+            </div>
+            <p style="color: var(--text-1); font-size: 0.88rem; line-height: 1.6;">
+              Susunan bit <span class="font-mono text-white">1101</span> bernilai <strong style="color: var(--neon-pink);">13</strong> dalam sistem desimal (8+4+0+1).
+            </p>
+          </div>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="team-role-list" style="grid-template-columns: 1fr;">
+            <div class="team-role-item">
+              <i class="fa-solid fa-microchip"></i>
+              <div>
+                <h5>Bit (Binary Digit)</h5>
+                <p>Satuan data terkecil pada komputer, hanya bernilai 0 atau 1.</p>
+              </div>
+            </div>
+            <div class="team-role-item">
+              <i class="fa-solid fa-image"></i>
+              <div>
+                <h5>Gambar & Warna</h5>
+                <p>Setiap piksel gambar disimpan sebagai kombinasi angka biner untuk warna RGB.</p>
+              </div>
+            </div>
+            <div class="team-role-item">
+              <i class="fa-solid fa-music"></i>
+              <div>
+                <h5>Teks, Suara, dan Video</h5>
+                <p>Semua jenis data diubah menjadi deretan angka 0 dan 1 agar dapat diproses komputer.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KENAPA HARUS BELAJAR INI -->
+  <section id="kenapa" class="content-section" style="background: rgba(255,255,255,0.015);">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">💡 REFLEKSI</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Kenapa Harus <span style="color: var(--accent);">Belajar Ini?</span>
+      </h2>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-lg-8" data-aos="zoom-in">
+          <div class="comm-card" style="border-left-color: var(--accent); background: rgba(124,77,255,0.05);">
+            <h5 style="color: var(--accent);"><i class="fa-solid fa-quote-left me-2"></i> Kekuatan Berpikir Sistematis</h5>
+            <p style="font-size: 1rem;">
+              Berpikir komputasional melatih kalian memecah masalah rumit jadi langkah-langkah kecil yang logis — kemampuan yang tetap berguna bahkan tanpa menyentuh komputer sama sekali.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROYEK YANG AKAN DIBUAT -->
+  <section id="proyek" class="content-section">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">🛠️ PRAKTIK</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Proyek yang Akan <span style="color: var(--neon-cyan);">Dibuat</span>
+      </h2>
+      <p class="section-desc" data-aos="fade-up" data-aos-delay="150">
+        Tiga aktivitas praktik untuk mengasah kemampuan berpikir komputasional kalian:
+      </p>
+
+      <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-up">
+          <div class="glass-card h-100 text-center">
+            <div class="p-3 rounded-3 mb-3 mx-auto d-inline-flex" style="background: rgba(0,229,255,0.15); color: var(--neon-cyan); font-size: 1.5rem;">
+              <i class="fa-solid fa-list-check"></i>
+            </div>
+            <h5 class="text-white mb-2">Studi Kasus Algoritma Harian</h5>
+            <p style="color: var(--text-1); font-size: 0.9rem; line-height: 1.6;">Menyusun algoritma untuk aktivitas sehari-hari, misalnya rutinitas pagi sebelum sekolah.</p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="glass-card h-100 text-center">
+            <div class="p-3 rounded-3 mb-3 mx-auto d-inline-flex" style="background: rgba(46,230,168,0.15); color: var(--neon-mint); font-size: 1.5rem;">
+              <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <h5 class="text-white mb-2">Simulasi Penjadwalan</h5>
+            <p style="color: var(--text-1); font-size: 0.9rem; line-height: 1.6;">Merancang jadwal belajar mingguan yang efisien berdasarkan prioritas dan tenggat waktu.</p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="glass-card h-100 text-center">
+            <div class="p-3 rounded-3 mb-3 mx-auto d-inline-flex" style="background: rgba(255,46,146,0.15); color: var(--neon-pink); font-size: 1.5rem;">
+              <i class="fa-solid fa-diagram-project"></i>
+            </div>
+            <h5 class="text-white mb-2">Peta Struktur Data</h5>
+            <p style="color: var(--text-1); font-size: 0.9rem; line-height: 1.6;">Membuat peta visual struktur data (list, queue, stack) menggunakan contoh benda sehari-hari.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kuis" class="content-section">
+    <div class="container">
+      <p class="section-kicker" data-aos="fade-up">🎯 UJI PEMAHAMAN MANDIRI</p>
+      <h2 class="section-title" data-aos="fade-up" data-aos-delay="100">
+        Kuis Interaktif <span style="color: var(--neon-pink);">Bab 2</span>
+      </h2>
+
+      <div class="quiz-box max-w-700 mx-auto" data-aos="zoom-in">
+        <div id="quizContainer">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="font-mono text-cyan" style="font-size: 0.85rem;" id="quizProgress">Pertanyaan 1 dari 4</span>
+            <span class="badge bg-purple px-3 py-2 rounded-pill font-mono" id="quizScoreBadge">Skor: 0</span>
+          </div>
+
+          <h4 class="text-white mb-4" id="quizQuestion" style="font-size: 1.15rem; line-height: 1.5;">
+            Memuat pertanyaan...
+          </h4>
+
+          <div id="quizOptions"></div>
+
+          <div id="quizFeedback" class="mt-3 p-3 rounded-3 d-none" style="font-size: 0.9rem;"></div>
+
+          <div class="text-end mt-4">
+            <button id="nextQuizBtn" class="btn-glow py-2 px-4 d-none" onclick="nextQuestion()">
+              Lanjut <i class="fa-solid fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Banner to Other Chapters -->
+      <div class="chapter-nav" data-aos="fade-up">
+        <div>
+          <span class="font-mono text-muted" style="font-size: 0.75rem;">SELESAI BAB 2?</span>
+          <h4 class="text-white m-0" style="font-size: 1.1rem;">Lanjut ke Bab 3: Teknologi Informasi & Komunikasi</h4>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="bab1.html" class="chapter-nav__btn chapter-nav__btn--prev">
+            <i class="fa-solid fa-arrow-left"></i> Bab 1
+          </a>
+          <a href="bab3.html" class="chapter-nav__btn chapter-nav__btn--next">
+            Bab 3 <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
+      <span class="text-cyan font-mono fw-bold">Informatika VII</span> &middot; Kurikulum Merdeka
+    </div>
+    <p>Disusun sesuai Kurikulum Merdeka Buku Siswa Informatika SMP Kelas VII — Kemendikbudristek.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  AOS.init({ once: true, duration: 800, easing: "ease-out-cubic" });
+  initScrollProgress();
+  initParticles();
+  loadQuestion();
+});
+
+/* Scroll Progress Bar */
+function initScrollProgress() {
+  const bar = document.getElementById("scrollProgressBar");
+  window.addEventListener("scroll", () => {
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    bar.style.width = scrolled + "%";
+  }, { passive: true });
+}
+
+/* Background Particle Canvas Effect */
+function initParticles() {
+  const canvas = document.getElementById("particles-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let w, h, particles;
+
+  const COLORS = ["#7C4DFF", "#00E5FF", "#FF2E92", "#2EE6A8"];
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  function createParticles() {
+    const count = Math.min(60, Math.floor((w * h) / 22000));
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      r: Math.random() * 1.5 + 0.6,
+      c: COLORS[Math.floor(Math.random() * COLORS.length)]
+    }));
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.c;
+      ctx.globalAlpha = 0.6;
+      ctx.fill();
+    });
+
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const a = particles[i], b = particles[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = "rgba(124,77,255," + (1 - dist / 120) * 0.15 + ")";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  resize();
+  createParticles();
+  tick();
+
+  window.addEventListener("resize", () => { resize(); createParticles(); });
+}
+
+/* Interactive Self-Check Quiz Data & Logic */
+const QUIZ_DATA = [
+  {
+    q: "Kemampuan memecah masalah rumit menjadi langkah-langkah kecil yang logis disebut...",
+    options: ["Berpikir Komputasional", "Berpikir Kritis Sosial", "Berpikir Cepat", "Berpikir Acak"],
+    correct: 0,
+    explain: "Berpikir Komputasional adalah cara berpikir sistematis untuk memecah masalah menjadi langkah logis."
+  },
+  {
+    q: "Urutan langkah logis dan terstruktur untuk menyelesaikan suatu persoalan disebut...",
+    options: ["Struktur Data", "Algoritma", "Representasi Data", "Penjadwalan"],
+    correct: 1,
+    explain: "Algoritma adalah urutan langkah logis dan terstruktur untuk menyelesaikan sebuah persoalan."
+  },
+  {
+    q: "Struktur data di mana data yang masuk pertama juga diproses pertama (seperti antre di kantin) disebut...",
+    options: ["Stack (Tumpukan)", "List (Daftar)", "Queue (Antrean)", "Tabel"],
+    correct: 2,
+    explain: "Queue (Antrean) bekerja dengan prinsip First In, First Out (FIFO)."
+  },
+  {
+    q: "Satuan data terkecil pada komputer yang hanya bernilai 0 atau 1 disebut...",
+    options: ["Byte", "Piksel", "Bit", "Kode"],
+    correct: 2,
+    explain: "Bit (Binary Digit) adalah satuan data terkecil yang hanya bernilai 0 atau 1."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = false;
+
+function loadQuestion() {
+  const data = QUIZ_DATA[currentQ];
+  document.getElementById("quizProgress").innerText = `Pertanyaan ${currentQ + 1} dari ${QUIZ_DATA.length}`;
+  document.getElementById("quizQuestion").innerText = data.q;
+
+  const optionsDiv = document.getElementById("quizOptions");
+  optionsDiv.innerHTML = data.options.map((opt, i) => `
+    <button class="quiz-option" id="opt-${i}" onclick="checkAnswer(${i})">${String.fromCharCode(65 + i)}. ${opt}</button>
+  `).join("");
+
+  document.getElementById("quizFeedback").classList.add("d-none");
+  document.getElementById("nextQuizBtn").classList.add("d-none");
+  answered = false;
+}
+
+function checkAnswer(selectedIdx) {
+  if (answered) return;
+  answered = true;
+
+  const data = QUIZ_DATA[currentQ];
+  const feedback = document.getElementById("quizFeedback");
+  const options = document.querySelectorAll(".quiz-option");
+
+  options.forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === data.correct) btn.classList.add("correct");
+    else if (idx === selectedIdx) btn.classList.add("wrong");
+  });
+
+  if (selectedIdx === data.correct) {
+    score += 10;
+    document.getElementById("quizScoreBadge").innerText = `Skor: ${score}`;
+    feedback.className = "mt-3 p-3 rounded-3 text-white bg-success bg-opacity-25 border border-success";
+    feedback.innerHTML = `<i class="fa-solid fa-circle-check text-success me-2"></i> <strong>Benar!</strong> ${data.explain}`;
+  } else {
+    feedback.className = "mt-3 p-3 rounded-3 text-white bg-danger bg-opacity-25 border border-danger";
+    feedback.innerHTML = `<i class="fa-solid fa-circle-xmark text-danger me-2"></i> <strong>Kurang tepat.</strong> ${data.explain}`;
+  }
+
+  feedback.classList.remove("d-none");
+  document.getElementById("nextQuizBtn").classList.remove("d-none");
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < QUIZ_DATA.length) {
+    loadQuestion();
+  } else {
+    const container = document.getElementById("quizContainer");
+    container.innerHTML = `
+      <div class="text-center py-4">
+        <i class="fa-solid fa-trophy text-warning display-4 mb-3"></i>
+        <h3 class="text-white">Kuis Selesai!</h3>
+        <p class="text-cyan font-mono fs-5">Skor Akhir Kamu: ${score} / ${QUIZ_DATA.length * 10}</p>
+        <p class="text-muted" style="font-size: 0.9rem;">Selamat! Kamu telah menyelesaikan pemahaman mandiri Bab 2.</p>
+        <button class="btn-glow mt-3" onclick="resetQuiz()"><i class="fa-solid fa-rotate-right me-2"></i> Ulangi Kuis</button>
+      </div>
+    `;
+  }
+}
+
+function resetQuiz() {
+  currentQ = 0;
+  score = 0;
+  document.getElementById("quizScoreBadge").innerText = "Skor: 0";
+  location.reload();
+}
+</script>
+</body>
+</html>
